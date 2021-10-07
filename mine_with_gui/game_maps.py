@@ -170,45 +170,47 @@ class ShowMap():
         if dx in range(self.level[0]) and dy in range(self.level[0]):
             # 若输入在范围内
             map_true = true_map.get_true()
-            if map_true[dx][dy][0] == 9:
-                # 若挖到炸弹
-                self.is_lose(map_true, block_list)
-                # 失败时返回正值
-                return 1
+            if map_true[dx][dy][9] == 0:
+            
+                if map_true[dx][dy][0] == 9:
+                    # 若挖到炸弹
+                    self.is_lose(map_true, block_list)
+                    # 失败时返回正值
+                    return 1
 
-            elif map_true[dx][dy][0] == 0:
-                # 当前为零格
-                self.map_show[dx][dy] = ' '
-                block_list[dx][dy].change_image(self.map_show[dx][dy])
-                true_map.change_digged(dx, dy)
-                self.digged += 1
-                # 挖开当前格
-                for i in range(1, 9):
-                    xx, yy = map_true[dx][dy][i]
+                elif map_true[dx][dy][0] == 0 and map_true[dx][dy][9] == 0:
+                    # 当前为零格
+                    self.map_show[dx][dy] = ' '
+                    block_list[dx][dy].change_image(self.map_show[dx][dy])
+                    true_map.change_digged(dx, dy)
+                    self.digged += 1
+                    # 挖开当前格
+                    for i in range(1, 9):
+                        xx, yy = map_true[dx][dy][i]
 
-                    if xx != 99 and yy != 99:
-                        if map_true[xx][yy][i] != [99, 99] and map_true[xx][yy][9] != 1 and map_true[xx][yy][0] == 0:
-                            # 更新零值格
+                        if xx != 99 and yy != 99:
+                            if map_true[xx][yy][i] != [99, 99] and map_true[xx][yy][9] != 1 and map_true[xx][yy][0] == 0:
+                                # 更新零值格
+                                self.update_zero(true_map, xx, yy, block_list)
+
+                            elif map_true[xx][yy][i] != [99, 99] and map_true[xx][yy][9] != 1 and map_true[xx][yy][0] != 0:
+                                # 更新数值格
+                                self.update_num(true_map, xx, yy, block_list)
+
+                elif map_true[dx][dy][0] != 0:
+                    # 当前为数格
+                    self.map_show[dx][dy] = str(map_true[dx][dy][0])
+                    block_list[dx][dy].change_image(self.map_show[dx][dy])
+                    true_map.change_digged(dx, dy)
+                    self.digged += 1
+
+                    for i in (2, 4, 5, 7):
+                        # 只需检索上下左右
+                        xx, yy = map_true[dx][dy][i]
+
+                        if xx != 99 and yy != 99 and map_true[xx][yy][i] != [99, 99] and map_true[xx][yy][9] != 1 and map_true[xx][yy][0] == 0:
+                            # 若上下左右有零格
                             self.update_zero(true_map, xx, yy, block_list)
-
-                        elif map_true[xx][yy][i] != [99, 99] and map_true[xx][yy][9] != 1 and map_true[xx][yy][0] != 0:
-                            # 更新数值格
-                            self.update_num(true_map, xx, yy, block_list)
-
-            elif map_true[dx][dy][0] != 0:
-                # 当前为数格
-                self.map_show[dx][dy] = str(map_true[dx][dy][0])
-                block_list[dx][dy].change_image(self.map_show[dx][dy])
-                true_map.change_digged(dx, dy)
-                self.digged += 1
-
-                for i in (2, 4, 5, 7):
-                    # 只需检索上下左右
-                    xx, yy = map_true[dx][dy][i]
-
-                    if xx != 99 and yy != 99 and map_true[xx][yy][i] != [99, 99] and map_true[xx][yy][9] != 1 and map_true[xx][yy][0] == 0:
-                        # 若上下左右有零格
-                        self.update_zero(true_map, xx, yy, block_list)
 
     # 失败时为玩家显示地雷位置
 
