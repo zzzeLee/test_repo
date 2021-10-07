@@ -71,7 +71,8 @@ def save_board(name, timer, str_time, level_tag):
 def choose_level():
 
     in_key = 'K'
-    while not in_key in ('1', '2', '3', '4'):
+    while not in_key in {'1', '2', '3', '4'}:
+        os.system("cls")
         print('\nchoose your level:\n easy game  (8 *8  10)     -1\nnormal game (12*12 25)     -2',
               '\n hard game  (20*20 40)     -3\ncheck board                -b\n quit game                 -q\n')
         in_key = input(">>")
@@ -82,7 +83,6 @@ def choose_level():
             print_board()
             time.sleep(5)
             # os.system("clear")
-            os.system("cls")
 
         elif in_key == 'q':
             return (0, 0), '\0'
@@ -90,7 +90,7 @@ def choose_level():
     leveln = int(in_key)
 
     if leveln == 1:
-        return (8, 2), '1'
+        return (8, 10), '1'
 
     elif leveln == 2:
         return (12, 30), '2'
